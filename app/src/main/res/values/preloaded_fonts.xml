@@ -4,6 +4,9 @@
         <item>@font/eb_garamond</item>
         <item>@font/lato</item>
         <item>@font/lato_bold</item>
+<<<<<<< HEAD
         <item>@font/lato_thin</item>
+=======
+>>>>>>> ft-manager
     </array>
 </resources>

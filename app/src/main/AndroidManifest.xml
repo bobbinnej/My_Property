@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.moringaschool.myproperty">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -14,10 +16,35 @@
         android:theme="@style/Theme.MyProperty"
         tools:targetApi="31">
         <activity
+
+            android:name=".ManagerDashboardActivity2"
+            android:exported="false" />
+        <activity
+            android:name=".ui.PropertyDetailsActivity"
+
+            android:exported="false" />
+        <activity
+            android:name=".ui.AddManagerActivity"
+            android:exported="false" />
+       
+        <activity
+            android:name=".ui.PropertiesActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.DefectPostActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.MainActivity"
             android:exported="false" />
         <activity
             android:name=".ui.LoginActivity"
+            android:exported="false" />
+
+            android:name=".ui.SplashActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.ManagerDashboardActivity"
+
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

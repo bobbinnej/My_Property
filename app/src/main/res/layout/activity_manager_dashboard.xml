@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.MainActivity">
+
+    <Button
+        android:id="@+id/btnTenant"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="TENANTS"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btnContractor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="CONTRACTORS"
+        app:layout_constraintEnd_toEndOf="@+id/btnTenant"
+        app:layout_constraintStart_toStartOf="@+id/btnTenant"
+        app:layout_constraintTop_toBottomOf="@+id/btnTenant" />
+
+    <Button
+        android:id="@+id/btnBuilding"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="Building"
+        app:layout_constraintEnd_toEndOf="@+id/btnContractor"
+        app:layout_constraintStart_toStartOf="@+id/btnContractor"
+        app:layout_constraintTop_toBottomOf="@+id/btnContractor" />
+
+    <Button
+        android:id="@+id/btnMaintenance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="MAINTENANCE ISSUES"
+        app:layout_constraintEnd_toEndOf="@+id/btnBuilding"
+        app:layout_constraintStart_toStartOf="@+id/btnBuilding"
+        app:layout_constraintTop_toBottomOf="@+id/btnBuilding" />
+    <Button
+        android:id="@+id/btnGetDefects"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="GET DEFECTS"
+        app:layout_constraintEnd_toEndOf="@+id/btnBuilding"
+        app:layout_constraintStart_toStartOf="@+id/btnBuilding"
+        app:layout_constraintTop_toBottomOf="@+id/btnMaintenance" />
+</androidx.constraintlayout.widget.ConstraintLayout>

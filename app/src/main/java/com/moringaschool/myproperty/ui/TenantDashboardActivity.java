@@ -26,5 +26,13 @@ public class TenantDashboardActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        mainBind.historyCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(TenantDashboardActivity.this, TenantsDefectsActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 }

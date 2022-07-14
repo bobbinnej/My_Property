@@ -1,6 +1,7 @@
 package com.moringaschool.myproperty.ui;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -11,17 +12,21 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.moringaschool.myproperty.R;
 import com.moringaschool.myproperty.adapters.DefectRecAdapter;
@@ -49,6 +54,7 @@ public class PropertiesActivity extends AppCompatActivity implements View.OnClic
     PropertyRecAdapter adapter;
     Call<List<Property>> call1;
     Call<Property> call2;
+    Call<List<Defect>> call3;
     SharedPreferences pref;
     DefectRecAdapter adp;
     DatabaseReference ref;
@@ -73,22 +79,10 @@ public class PropertiesActivity extends AppCompatActivity implements View.OnClic
         properBind.managerName.setText("Hey, "+ pref.getString(Constants.NAME, "Charles"));
 
 
-//        ref.child(Constants.PROPERTY_MANAGERS).child(pref.getString(Constants.EMAIL,"")).addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                manager = snapshot.getValue(PropertyManager.class);
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError t) {
-//                String error = t.getMessage();
-//                Toast.makeText(PropertiesActivity.this, error, Toast.LENGTH_SHORT).show();
-//            }
-//        });
-
 
         properBind.add.setOnClickListener(this);
         properBind.add2.setOnClickListener(this);
+        bottomClick(properBind.bottom);
         dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
 
 //        manager = (PropertyManager) getIntent().getSerializableExtra("manager");
@@ -97,37 +91,41 @@ public class PropertiesActivity extends AppCompatActivity implements View.OnClic
         allProperties = new ArrayList<>();
         allDefects = new ArrayList<>();
         calls = RetrofitClient.getClient();
+        String name1 = pref.getString(Constants.NAME, "");
 
         call1 = calls.getManagerProperties(pref.getString(Constants.NAME, "Charles"));
+        call3 = calls.managerDefects(pref.getString(Constants.NAME, "Charles"));
 
 
 
-        ref.child("defects").addValueEventListener(new ValueEventListener() {
+    }
+
+    private void bottomClick( BottomNavigationView bottom) {
+        bottom.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                if (snapshot != null){
-                    for (DataSnapshot singleDefect: snapshot.getChildren()){
-                        Defect defect = singleDefect.getValue(Defect.class);
-                        allDefects.add(defect);
-                    }
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.home:
+                        return true;
+                    case R.id.tenants:
+                        startActivity(new Intent(PropertiesActivity.this, MainActivity.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                    case R.id.requests:
+                        startActivity(new Intent(PropertiesActivity.this, ManagersDoneDefects.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                    case R.id.back:
+                        Intent intent = new Intent(PropertiesActivity.this, SplashActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                        finish();
+                        overridePendingTransition(0,0);
+                        return true;
                 }
-
-                adp = new DefectRecAdapter(allDefects, PropertiesActivity.this);
-                properBind.recView.setAdapter(adp);
-                properBind.recView.setLayoutManager(new LinearLayoutManager(PropertiesActivity.this));
-                properBind.recView.setHasFixedSize(true);
-                adp.notifyDataSetChanged();
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError t) {
-                String error = t.getMessage();
-                Toast.makeText(PropertiesActivity.this, error, Toast.LENGTH_SHORT).show();
+                return false;
             }
         });
-
     }
 
     private void createDialog() {
@@ -182,7 +180,7 @@ public class PropertiesActivity extends AppCompatActivity implements View.OnClic
 
         }else
         if (v == properBind.add2){
-            Intent intent = new Intent(PropertiesActivity.this, DefectPostActivity.class);
+            Intent intent = new Intent(PropertiesActivity.this, TenantDefectActivity.class);
             startActivity(intent);
         }
 
@@ -207,5 +205,30 @@ public class PropertiesActivity extends AppCompatActivity implements View.OnClic
                 Toast.makeText(PropertiesActivity.this, error, Toast.LENGTH_SHORT).show();
             }
         });
+
+        call3.clone().enqueue(new Callback<List<Defect>>() {
+            @Override
+            public void onResponse(Call<List<Defect>> call, Response<List<Defect>> response) {
+                if (response.isSuccessful()){
+
+                    allDefects = response.body();
+                    adp = new DefectRecAdapter(allDefects, PropertiesActivity.this);
+                    properBind.recView.setAdapter(adp);
+                    properBind.recView.setHasFixedSize(true);
+                    properBind.recView.setLayoutManager(new LinearLayoutManager(PropertiesActivity.this));
+                }else{
+                    Toast.makeText(PropertiesActivity.this,"Something happened", Toast.LENGTH_SHORT).show();
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Defect>> call, Throwable t) {
+                String error = t.getMessage();
+                Toast.makeText(PropertiesActivity.this, error, Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
     }
 }

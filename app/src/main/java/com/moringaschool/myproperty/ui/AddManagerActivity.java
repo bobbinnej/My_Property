@@ -80,6 +80,7 @@ public class AddManagerActivity extends AppCompatActivity implements View.OnClic
             @Override
             public void onResponse(Call<PropertyManager> call, Response<PropertyManager> response) {
                 if (response.isSuccessful()){
+
                     Toast.makeText(AddManagerActivity.this, "Tunaelekea", Toast.LENGTH_SHORT).show();
                 }else{
                     Toast.makeText(AddManagerActivity.this, "Try Again", Toast.LENGTH_SHORT).show();

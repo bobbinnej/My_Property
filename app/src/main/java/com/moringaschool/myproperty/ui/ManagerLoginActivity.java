@@ -53,11 +53,15 @@ public class ManagerLoginActivity extends AppCompatActivity implements View.OnCl
 
         myAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(task -> {
             if (task.isSuccessful()){
+<<<<<<< HEAD
 <<<<<<< HEAD:app/src/main/java/com/moringaschool/myproperty/ui/LoginActivity.java
                 Intent intent = new Intent(LoginActivity.this, PropertiesActivity.class);
 =======
                 Intent intent = new Intent(ManagerLoginActivity.this, ManagerDashboardActivity.class);
 >>>>>>> ft-tenant:app/src/main/java/com/moringaschool/myproperty/ui/ManagerLoginActivity.java
+=======
+                Intent intent = new Intent(ManagerLoginActivity.this, PropertiesActivity.class);
+>>>>>>> ft-network
                 startActivity(intent);
             }
         });

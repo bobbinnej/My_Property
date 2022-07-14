@@ -1,6 +1,8 @@
 package com.moringaschool.myproperty.adapters;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,15 +14,21 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.moringaschool.myproperty.R;
 import com.moringaschool.myproperty.api.ApiCalls;
 import com.moringaschool.myproperty.api.RetrofitClient;
+import com.moringaschool.myproperty.models.Constants;
 import com.moringaschool.myproperty.models.Tenant;
 import com.moringaschool.myproperty.models.Unit;
 
+import java.text.DateFormat;
 import java.util.List;
 
 import retrofit2.Call;
@@ -30,6 +38,9 @@ import retrofit2.Response;
 public class UnitRecAdapter extends RecyclerView.Adapter<UnitRecAdapter.myHolder> {
     List<Unit> allUnits;
     Context cont;
+    Call<Tenant> call;
+    ApiCalls calls;
+    Tenant tenant;
 
     public UnitRecAdapter(List<Unit> allUnits, Context cont) {
         this.allUnits = allUnits;
@@ -47,6 +58,32 @@ public class UnitRecAdapter extends RecyclerView.Adapter<UnitRecAdapter.myHolder
     public void onBindViewHolder(@NonNull myHolder holder, int position) {
         holder.setData(allUnits.get(position));
 
+        calls = RetrofitClient.getClient();
+        call = calls.getTenant(allUnits.get(position).getUnitName());
+
+        call.enqueue(new Callback<Tenant>() {
+            @Override
+            public void onResponse(Call<Tenant> call, Response<Tenant> response) {
+                if (response.body() != null){
+                    tenant = response.body();
+                    holder.tenantName1.setText("Occupied by: "+tenant.getTenant_name());
+                    holder.tenantPhone2.setText(tenant.getTenant_phone());
+                    String date = DateFormat.getDateTimeInstance().format(tenant.getJoined());
+                    holder.unitRooms.setText(date);
+                    holder.add.setVisibility(View.GONE);
+                }else{
+                    holder.tenantName1.setText("Vacant");
+                    holder.tenantPhone2.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Tenant> call, Throwable t) {
+                String error = t.getMessage();
+                Toast.makeText(cont, error, Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 
     @Override
@@ -60,8 +97,10 @@ public class UnitRecAdapter extends RecyclerView.Adapter<UnitRecAdapter.myHolder
         ImageView add, remove;
         BottomSheetDialog dialog;
         Unit unit;
-        Call<Tenant> call;
+        Call<Tenant> call, call1;
         ApiCalls calls;
+        Tenant tenant, tenant1;
+        SharedPreferences pref;
 
 
         public myHolder(@NonNull View itemView) {
@@ -73,6 +112,8 @@ public class UnitRecAdapter extends RecyclerView.Adapter<UnitRecAdapter.myHolder
             remove = itemView.findViewById(R.id.remove);
             add = itemView.findViewById(R.id.add);
 
+            pref = PreferenceManager.getDefaultSharedPreferences(cont);
+            calls = RetrofitClient.getClient();
 
             dialog = new BottomSheetDialog(cont);
             createDialog();
@@ -82,11 +123,26 @@ public class UnitRecAdapter extends RecyclerView.Adapter<UnitRecAdapter.myHolder
 
         }
 
+        public void setData(Unit unit){
+            name.setText(unit.getUnit_name());
+            tenantName1.setVisibility(View.GONE);
+            unitRooms.setText("This unit contains "+unit.getUnit_rooms() + " rooms");
+            this.unit = unit;
+        }
+
+
+
+        @Override
+        public void onClick(View v) {
+            if (v == add){
+                dialog.show();
+            }
+        }
+
         private void createDialog() {
             View v = LayoutInflater.from(cont).inflate(R.layout.add_tenant, null, false);
 
 
-            calls = RetrofitClient.getClient();
 
             TextInputLayout name = v.findViewById(R.id.tenantUsername);
             TextInputLayout phone = v.findViewById(R.id.editTextPhone);
@@ -103,17 +159,41 @@ public class UnitRecAdapter extends RecyclerView.Adapter<UnitRecAdapter.myHolder
                     String tenantEmail = email.getEditText().getText().toString().trim();
                     String tenantId = id.getEditText().getText().toString().trim();
 
-                    Tenant tenant = new Tenant(tenantName, tenantEmail,tenantPhone,tenantId,unit.getProperty_name(),unit.getUnit_name());
+                    tenant = new Tenant(tenantName,tenantEmail,tenantPhone,tenantId, unit.getProperty_name(), unit.getUnit_name(),pref.getString(Constants.NAME, "") );
+
                     call = calls.addTenant(tenant);
-                    call.clone().enqueue(new Callback<Tenant>() {
+                    call.enqueue(new Callback<Tenant>() {
                         @Override
                         public void onResponse(Call<Tenant> call, Response<Tenant> response) {
                             if (response.isSuccessful()){
+                                DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Tenants");
+                                ref.child(tenantId).setValue(tenant);
                                 tenantName1.setText(tenantName);
                                 tenantPhone2.setText(tenantPhone);
                                 Toast.makeText(cont, "Tenant successfully onboarded", Toast.LENGTH_SHORT).show();
-                                dialog.dismiss();
+
+                                call1 = calls.getTenant(unit.getUnitName());
+                                call1.enqueue(new Callback<Tenant>() {
+                                    @Override
+                                    public void onResponse(Call<Tenant> call, Response<Tenant> response) {
+                                        if (response.isSuccessful()){
+                                            tenant1 = response.body();
+                                            tenantName1.setText(tenant1.getTenant_name());
+                                            tenantPhone2.setText(tenant1.getTenant_phone());
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<Tenant> call, Throwable t) {
+                                        String error = t.getMessage();
+                                        Toast.makeText(cont, error, Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+
+                            }else{
+                                Toast.makeText(cont, "please try again", Toast.LENGTH_SHORT).show();
                             }
+                            dialog.dismiss();
                         }
 
                         @Override
@@ -121,27 +201,14 @@ public class UnitRecAdapter extends RecyclerView.Adapter<UnitRecAdapter.myHolder
                             String error = t.getMessage();
                             Toast.makeText(cont, error, Toast.LENGTH_SHORT).show();
 
+
                         }
                     });
-
                 }
+
             });
 
             dialog.setContentView(v);
-        }
-
-        public void setData(Unit unit){
-            name.setText(unit.getUnit_name());
-            tenantName1.setText("Vacant");
-            unitRooms.setText("This unit contains "+unit.getUnit_rooms() + " rooms");
-            this.unit = unit;
-        }
-
-        @Override
-        public void onClick(View v) {
-            if (v == add){
-                dialog.show();
-            }
         }
     }
 }

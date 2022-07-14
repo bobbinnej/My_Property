@@ -16,12 +16,14 @@ public class SelectActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_select);
+        binding = ActivitySelectBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
         binding.managerRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent intent = new Intent(SelectActivity.this, ManagerLoginActivity.class);
-//                startActivity(intent);
+                Intent intent = new Intent(SelectActivity.this, ManagerLoginActivity.class);
+                startActivity(intent);
             }
         });
         binding.tenantLogin.setOnClickListener(new View.OnClickListener() {

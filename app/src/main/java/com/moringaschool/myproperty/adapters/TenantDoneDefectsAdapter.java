@@ -1,12 +1,10 @@
 package com.moringaschool.myproperty.adapters;
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,38 +13,35 @@ import com.bumptech.glide.Glide;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.moringaschool.myproperty.R;
 import com.moringaschool.myproperty.models.Defect;
-import com.moringaschool.myproperty.ui.DefectsActivity;
-import com.moringaschool.myproperty.ui.PropertyDetailsActivity;
+import com.moringaschool.myproperty.models.DoneDefect;
 
-import java.io.Serializable;
 import java.text.DateFormat;
 import java.util.List;
 
-public class DefectRecAdapter extends RecyclerView.Adapter<DefectRecAdapter.myHolder> {
-    List<Defect> allDefects;
+public class TenantDoneDefectsAdapter extends RecyclerView.Adapter<TenantDoneDefectsAdapter.myHolder>{
+    List<DoneDefect> allDoneDefects;
     Context cont;
 
-    public DefectRecAdapter(List<Defect> allDefects, Context cont) {
-        this.allDefects = allDefects;
+    public TenantDoneDefectsAdapter(List<DoneDefect> allDoneDefects, Context cont) {
+        this.allDoneDefects = allDoneDefects;
         this.cont = cont;
     }
 
     @NonNull
     @Override
     public myHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(cont).inflate(R.layout.property, parent, false);
+        View v = LayoutInflater.from(cont).inflate(R.layout.property,parent, false);
         return new myHolder(v);
     }
 
     @Override
     public void onBindViewHolder(@NonNull myHolder holder, int position) {
-        holder.setData(allDefects.get(position));
-
+        holder.setData(allDoneDefects.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return allDefects.size();
+        return allDoneDefects.size();
     }
 
     public class myHolder extends RecyclerView.ViewHolder {
@@ -63,30 +58,31 @@ public class DefectRecAdapter extends RecyclerView.Adapter<DefectRecAdapter.myHo
             phone = itemView.findViewById(R.id.manager_name);
             date = itemView.findViewById(R.id.joined);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int position = getLayoutPosition();
-                    Intent intent = new Intent(cont, DefectsActivity.class);
-                    intent.putExtra("position", position);
-                    intent.putExtra("allDefects", (Serializable) allDefects);
-                    cont.startActivity(intent);
-                }
-            });
+//            itemView.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    int position = getLayoutPosition();
+//                    Intent intent = new Intent(cont, DefectsActivity.class);
+//                    intent.putExtra("position", position);
+//                    intent.putExtra("allDefects", (Serializable) allDefects);
+//                    cont.startActivity(intent);
+//                    Toast.makeText(cont, "Coming Wait and Relax ", Toast.LENGTH_LONG).show();
+//                }
+//            });
 
         }
 
-        public void setData(Defect defect){
-            name.setText(defect.getDescription());
-            description.setText("In property: "+defect.getProperty_name());
+        public void setData(DoneDefect defect) {
+            name.setText(defect.getName());
+            description.setText("Assigned: " + defect.getContactor_name());
             Glide.with(cont)
                     .asBitmap()
-                    .load(defect.getString_uri())
+                    .load(defect.getUri())
                     .into(img);
-            managerName.setVisibility(View.GONE);
-            phone.setText("Defect in: "+defect.getUnit_name());
+            managerName.setText("Assigned by: " + defect.getManager_name());
+            phone.setText("Contractor phone: " + defect.getContractor_phone() + " Found at: "+defect.getContractor_location());
             String newDate = DateFormat.getDateTimeInstance().format(defect.getCreated_at());
-            date.setText("Posted in: "+newDate);
+            date.setText("Posted in: " + newDate);
         }
     }
 }

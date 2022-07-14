@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.moringaschool.myproperty" >
+    package="com.moringaschool.myproperty">
 
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -17,13 +17,32 @@
         android:roundIcon="@drawable/goldlogo"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyProperty"
-        tools:targetApi="31" >
-
+        tools:targetApi="31">
         <activity
+            android:name=".ui.ManagersDoneDefects"
+            android:exported="false" />
+        <activity
+            android:name=".ui.TenantsDoneDefects"
+            android:exported="false" />
+        <activity
+            android:name=".ui.TenantMainActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.TenantsDefectsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.DefectsActivity"
+            android:exported="false" />
+        <activity
+
             android:name=".ui.DefectActivity"
             android:exported="false" />
         <activity
             android:name=".ui.TenantDefectActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.TenantDashboardActivity"
             android:exported="false" />
         <activity
             android:name=".ui.PropertyDetailsActivity"
@@ -53,7 +72,10 @@
             android:name=".ui.ManagerLoginActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.TenantDashboardActivity"
+            android:name=".ui.TenantLoginActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -61,8 +83,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
     </application>
+
 </manifest>

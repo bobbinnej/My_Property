@@ -9,11 +9,13 @@ import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Toast;
@@ -30,11 +32,18 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.moringaschool.myproperty.R;
+import com.moringaschool.myproperty.api.ApiCalls;
+import com.moringaschool.myproperty.api.RetrofitClient;
 import com.moringaschool.myproperty.databinding.ActivityDefectPostBinding;
 import com.moringaschool.myproperty.databinding.ActivityTenantDefectBinding;
+import com.moringaschool.myproperty.models.Constants;
 import com.moringaschool.myproperty.models.Defect;
 
 import java.io.IOException;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class TenantDefectActivity extends AppCompatActivity {
 
@@ -49,6 +58,10 @@ public class TenantDefectActivity extends AppCompatActivity {
     FirebaseStorage storage;
     StorageReference storageReference;
 
+    SharedPreferences pref;
+    Call<Defect> call;
+    ApiCalls calls;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,9 +69,17 @@ public class TenantDefectActivity extends AppCompatActivity {
         setContentView(mainBind.getRoot());
         FirebaseApp.initializeApp(this);
 
+        pref = PreferenceManager.getDefaultSharedPreferences(this);
+
+
         // get the Firebase  storage reference
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
+        calls = RetrofitClient.getClient();
+
+        mainBind.buildingNameET.getEditText().setText(pref.getString(Constants.PROPERTY_NAME, ""));
+        mainBind.houseNumberET.getEditText().setText(pref.getString(Constants.UNIT_NAME, ""));
+
 
         mainBind.captureImageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -204,6 +225,8 @@ public class TenantDefectActivity extends AppCompatActivity {
                                     progressDialog.dismiss();
                                     Toast.makeText(TenantDefectActivity.this,"Image Uploaded!!",Toast.LENGTH_SHORT).show();
                                     saveDefect();
+                                    startActivity(new Intent(TenantDefectActivity.this, TenantMainActivity.class));
+
                                 }
                             })
 
@@ -228,13 +251,36 @@ public class TenantDefectActivity extends AppCompatActivity {
 
     private void saveDefect() {
         String defectDescription = mainBind.defectDescriptionEditText.getEditText().getText().toString().trim();
-        String buildingName = mainBind.buildingNameET.getEditText().getText().toString().trim();
-        String houseNumber = mainBind.houseNumberET.getEditText().getText().toString().trim();
-        defect = new Defect(defectDescription, buildingName, houseNumber,downloadUri);
-        defect.setStingUri(downloadUri);
-        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        DatabaseReference databaseReference = firebaseDatabase.getInstance().getReference("defects");
-        databaseReference.push().setValue(defect);
+        String tenant_id = pref.getString(Constants.TENANT_ID, "");
+        String manager_name = pref.getString(Constants.DEFECT_MANAGER_NAME, "");
+
+        defect = new Defect(defectDescription, pref.getString(Constants.PROPERTY_NAME, ""), pref.getString(Constants.UNIT_NAME, ""),downloadUri,tenant_id,manager_name);
+        defect.setString_uri(downloadUri);
+        defect.setManager_name(manager_name);
+
+        call = calls.addDefect(defect);
+        call.enqueue(new Callback<Defect>() {
+            @Override
+            public void onResponse(Call<Defect> call, Response<Defect> response) {
+                if (response.isSuccessful()){
+                    FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+                    DatabaseReference databaseReference = firebaseDatabase.getReference("defects");
+                    databaseReference.child(pref.getString(Constants.DEFECT_MANAGER_NAME,"")).child(defect.getDescription()).setValue(defect);
+                    Toast.makeText(TenantDefectActivity.this, "Defect submitted successfully", Toast.LENGTH_SHORT).show();
+
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<Defect> call, Throwable t) {
+                String error = t.getMessage();
+                Toast.makeText(TenantDefectActivity.this, error, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+
     }
 
 }

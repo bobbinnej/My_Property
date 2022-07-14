@@ -1,8 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="blue">#003049</color>
+<<<<<<< HEAD
+<<<<<<< HEAD
+    <color name="blue1">#0D577E</color>
+=======
+    <color name="light_blue">#EBF4FA</color>
+>>>>>>> ft-tenant
+=======
     <color name="light_blue">#EBF4FA</color>
     <color name="blue1">#0D577E</color>
+>>>>>>> ft-network
     <color name="gold">#dca85e</color>
     <color name="dark_grey">#515151</color>
     <color name="light_grey">#eeeeee</color>

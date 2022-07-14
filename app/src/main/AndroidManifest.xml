@@ -34,11 +34,13 @@
             android:name=".ui.DefectsActivity"
             android:exported="false" />
         <activity
-            android:name=".TenantLoginActivity"
+
+            android:name=".ui.DefectActivity"
             android:exported="false" />
         <activity
             android:name=".ui.TenantDefectActivity"
             android:exported="false" />
+
         <activity
             android:name=".ui.TenantDashboardActivity"
             android:exported="false" />
@@ -54,15 +56,15 @@
         <activity
             android:name=".ui.DefectPostActivity"
             android:exported="false" />
+
         <activity
             android:name=".ui.MainActivity"
             android:exported="false" />
         <activity
             android:name=".ui.SelectActivity"
             android:exported="false" />
-        <activity
-            android:name=".ui.DefectActivity"
-            android:exported="true" />
+
+
         <activity
             android:name=".ui.ManagerDashboardActivity"
             android:exported="false" />

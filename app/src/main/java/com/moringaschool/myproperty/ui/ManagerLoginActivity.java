@@ -10,11 +10,10 @@ import android.view.View;
 import android.view.WindowManager;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.moringaschool.myproperty.R;
 import com.moringaschool.myproperty.databinding.ActivityLoginBinding;
 import com.moringaschool.myproperty.models.Constants;
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener{
+public class ManagerLoginActivity extends AppCompatActivity implements View.OnClickListener{
     ActivityLoginBinding logBind;
     FirebaseAuth myAuth;
     SharedPreferences myData;
@@ -38,7 +37,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onClick(View v) {
         if (v == logBind.addManager){
-            Intent intent = new Intent(LoginActivity.this, AddManagerActivity.class);
+            Intent intent = new Intent(ManagerLoginActivity.this, AddManagerActivity.class);
             startActivity(intent);
         }else if(v == logBind.login){
             login();
@@ -54,7 +53,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         myAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(task -> {
             if (task.isSuccessful()){
+<<<<<<< HEAD:app/src/main/java/com/moringaschool/myproperty/ui/LoginActivity.java
                 Intent intent = new Intent(LoginActivity.this, PropertiesActivity.class);
+=======
+                Intent intent = new Intent(ManagerLoginActivity.this, ManagerDashboardActivity.class);
+>>>>>>> ft-tenant:app/src/main/java/com/moringaschool/myproperty/ui/ManagerLoginActivity.java
                 startActivity(intent);
             }
         });

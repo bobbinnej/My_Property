@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF"
     android:orientation="vertical"
-    android:padding="20dp"
-    tools:context=".ui.ManagerLoginActivity">
-
+    android:padding="16dp"
+    tools:context=".ui.TenantLoginActivity">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -17,32 +16,25 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
-
+            android:orientation="vertical"
+            >
             <ImageView
                 android:id="@+id/loginlogo"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:src="@drawable/whitelogo" />
-
-            <TextView
-                android:id="@+id/signinMessage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/lato"
-                android:text="Sign in to continue"
-                android:textColor="@color/blue"
-                android:textSize="18sp" />
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:elevation="32dp"
+                android:src="@drawable/bg3" />
 
             <TextView
                 android:id="@+id/welcomeText"
+                android:paddingTop="16dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/eb_garamond"
+                android:fontFamily="@font/candal"
                 android:text="Hello there, Welcome Back"
                 android:textColor="@color/blue"
 
-                android:textSize="32sp" />
+                android:textSize="20sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -89,33 +81,24 @@
                     android:text="Forgot Password?"
                     android:textColor="#000" />
 
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/login"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/gold"
+                    android:fontFamily="@font/candal"
+                    android:padding="8dp"
+                    android:elevation="16dp"
+                    android:backgroundTint="@color/gold"
                     android:layout_gravity="right"
                     android:layout_marginTop="5dp"
                     android:layout_marginBottom="5dp"
                     android:background="#000000"
-                    android:elevation="0dp"
                     android:text="Login" />
-
-                <Button
-                    android:id="@+id/addManager"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="right"
-                    android:layout_margin="5dp"
-                    android:background="#00000000"
-                    android:elevation="0dp"
-                    android:text="New user? Register Now"
-                    android:textColor="#000" />
-
 
             </LinearLayout>
 
         </LinearLayout>
     </ScrollView>
 
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

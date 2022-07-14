@@ -5,8 +5,12 @@
         <item>@font/lato</item>
         <item>@font/lato_bold</item>
 <<<<<<< HEAD
+<<<<<<< HEAD
         <item>@font/lato_thin</item>
 =======
 >>>>>>> ft-manager
+=======
+        <item>@font/lato_thin</item>
+>>>>>>> ft-login
     </array>
 </resources>

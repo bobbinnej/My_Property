@@ -1,14 +1,12 @@
-package com.moringaschool.myproperty.ui.models;
-
-import android.net.Uri;
+package com.moringaschool.myproperty.models;
 
 public class Defect {
-    private String description , building, houseNumber, imageUri;
+    private String description , building, houseNumber, stingUri;
 
     public Defect() {
     }
 
-    public Defect(String description, String building, String houseNumber) {
+    public Defect(String description, String building, String houseNumber, String stingUri) {
         this.description = description;
         this.building = building;
         this.houseNumber = houseNumber;
@@ -38,11 +36,11 @@ public class Defect {
         this.houseNumber = houseNumber;
     }
 
-    public String getImageUri() {
-        return imageUri;
+    public String getStingUri() {
+        return stingUri;
     }
 
-    public void setImageUri(String imageUri) {
-        this.imageUri = imageUri;
+    public void setStingUri(String stingUri) {
+        this.stingUri = stingUri;
     }
 }

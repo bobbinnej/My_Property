@@ -1,8 +1,10 @@
-package com.moringaschool.myproperty;
+package com.moringaschool.myproperty.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import com.moringaschool.myproperty.R;
 
 public class ManagerDashboardActivity2 extends AppCompatActivity {
 

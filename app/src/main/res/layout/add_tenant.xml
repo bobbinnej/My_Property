@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-    android:background="@color/white"
+    android:background="@drawable/layout"
+    android:backgroundTint="#c4c4c4"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -87,38 +88,20 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/propertyName"
+                    android:id="@+id/tenantId"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:hint="Name of Property">
+                    android:layout_marginTop="12dp">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ems="10"
-                        android:inputType="text" />
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/unitNumber"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:hint="Unit Number">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:ems="10"
-                            android:inputType="text" />
-
-                    </com.google.android.material.textfield.TextInputLayout>
+                        android:hint="Enter your national Id"
+                        android:inputType="number" />
 
                 </com.google.android.material.textfield.TextInputLayout>
-
-
                 <Button
                     android:id="@+id/addTenant"
                     android:layout_width="match_parent"

@@ -14,7 +14,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Toast;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -23,19 +22,15 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.moringaschool.myproperty.R;
 import com.moringaschool.myproperty.databinding.ActivityDefectPostBinding;
 
-import java.util.HashMap;
 import java.util.UUID;
-import android.graphics.Bitmap;
-import com.google.firebase.FirebaseApp;
+
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import java.io.IOException;
-import com.moringaschool.myproperty.ui.models.Defect;
+import com.moringaschool.myproperty.models.Defect;
 
 public class DefectPostActivity extends AppCompatActivity {
     private static final int PERMISSION_CODE = 1000;
@@ -50,7 +45,6 @@ public class DefectPostActivity extends AppCompatActivity {
     StorageReference storageReference;
     AutoCompleteTextView buildingNameET;
     AutoCompleteTextView tenantNameET;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,19 +106,19 @@ public class DefectPostActivity extends AppCompatActivity {
         startActivityForResult(cameraIntent, IMAGE_CAPTURE_CODE);
     }
 
-    // Select Image method
-    private void SelectImage()
-    {
-        // Defining Implicit Intent to mobile gallery
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(
-                Intent.createChooser(
-                        intent,
-                        "Select Image from here..."),
-                PICK_IMAGE_REQUEST);
-    }
+//    // Select Image method
+//    private void SelectImage()
+//    {
+//        // Defining Implicit Intent to mobile gallery
+//        Intent intent = new Intent();
+//        intent.setType("image/*");
+//        intent.setAction(Intent.ACTION_GET_CONTENT);
+//        startActivityForResult(
+//                Intent.createChooser(
+//                        intent,
+//                        "Select Image from here..."),
+//                PICK_IMAGE_REQUEST);
+//    }
 
 
 //    // Override onActivityResult method
@@ -260,16 +254,16 @@ public class DefectPostActivity extends AppCompatActivity {
         String houseNumber = mainBind.houseNumberET.getText().toString().trim();
 
         uploadImage();
-        defect = new Defect(defectDescription, buildingName, houseNumber);
-        defect.setImageUri(downloadUri);
-
-        Toast
-                .makeText(DefectPostActivity.this,
-                        downloadUri,
-                        Toast.LENGTH_SHORT)
-                .show();
+        defect = new Defect(defectDescription, buildingName, houseNumber,downloadUri);
+        defect.setStingUri(downloadUri);
+//
+//        Toast
+//                .makeText(DefectPostActivity.this,
+//                        downloadUri,
+//                        Toast.LENGTH_SHORT)
+//                .show();
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        DatabaseReference databaseReference = firebaseDatabase.getReference().child("defects");
+        DatabaseReference databaseReference = firebaseDatabase.getInstance().getReference("defects");
         databaseReference.push().setValue(defect);
 
 

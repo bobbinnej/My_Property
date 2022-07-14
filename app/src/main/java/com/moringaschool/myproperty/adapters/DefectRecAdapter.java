@@ -1,18 +1,19 @@
-package com.moringaschool.myproperty.ui.adapters;
+package com.moringaschool.myproperty.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.moringaschool.myproperty.R;
-import com.moringaschool.myproperty.ui.models.Defect;
-import com.squareup.picasso.Picasso;
+import com.moringaschool.myproperty.models.Defect;
 
 import java.util.List;
 
@@ -54,12 +55,22 @@ public class DefectRecAdapter extends RecyclerView.Adapter<DefectRecAdapter.myHo
             description = itemView.findViewById(R.id.propertyDescription);
             img = itemView.findViewById(R.id.image);
 
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(cont, "Coming Wait and Relax ", Toast.LENGTH_LONG).show();
+                }
+            });
+
         }
 
         public void setData(Defect defect){
             name.setText(defect.getBuilding());
             description.setText(defect.getDescription());
-            Picasso.get().load(defect.getImageUri()).into(img);
+            Glide.with(cont)
+                    .asBitmap()
+                    .load(defect.getStingUri())
+                    .into(img);
         }
     }
 }

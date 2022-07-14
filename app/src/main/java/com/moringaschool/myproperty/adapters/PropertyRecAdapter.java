@@ -1,4 +1,4 @@
-package com.moringaschool.myproperty.ui.adapters;
+package com.moringaschool.myproperty.adapters;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,8 +11,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.moringaschool.myproperty.R;
+import com.moringaschool.myproperty.models.Property;
 import com.moringaschool.myproperty.ui.PropertyDetailsActivity;
-import com.moringaschool.myproperty.ui.models.Property;
 
 import java.io.Serializable;
 import java.util.List;
@@ -30,7 +30,7 @@ public class PropertyRecAdapter extends RecyclerView.Adapter<PropertyRecAdapter.
     @NonNull
     @Override
     public myHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(cont).inflate(R.layout.property, parent, false);
+        View v = LayoutInflater.from(cont).inflate(R.layout.single_defect, parent, false);
         return new myHolder(v);
     }
 
@@ -47,12 +47,12 @@ public class PropertyRecAdapter extends RecyclerView.Adapter<PropertyRecAdapter.
 
     public class myHolder extends RecyclerView.ViewHolder {
 
-        TextView name, description;
+        TextView name;
 
         public myHolder(@NonNull View itemView) {
             super(itemView);
-            name =  itemView.findViewById(R.id.propertyName);
-            description =  itemView.findViewById(R.id.propertyDescription);
+            name =  itemView.findViewById(R.id.name);
+//            description =  itemView.findViewById(R.id.propertyDescription);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -70,8 +70,8 @@ public class PropertyRecAdapter extends RecyclerView.Adapter<PropertyRecAdapter.
 
         public void setPropertyData(Property property){
 
-            name.setText(property.getProperty_name());
-            description.setText("This property belongs to: " + property.getManager_name());
+            name.setText(property.getProperty_name().toUpperCase());
+//            description.setText("This property belongs to: " + property.getManager_name());
 
         }
     }
